@@ -4,21 +4,34 @@ import mage.MageInt;
 import mage.abilities.Ability;
 import mage.abilities.common.EntersBattlefieldTriggeredAbility;
 import mage.abilities.common.OneOrMoreLeaveWithoutDyingTriggeredAbility;
+import mage.abilities.costs.mana.ManaCostsImpl;
 import mage.abilities.dynamicvalue.DynamicValue;
 import mage.abilities.dynamicvalue.common.CountersControllerCount;
+import mage.abilities.effects.OneShotEffect;
 import mage.abilities.effects.common.CreateTokenEffect;
+import mage.abilities.effects.common.continuous.GainAbilityTargetEffect;
 import mage.abilities.effects.common.counter.AddCountersPlayersEffect;
+import mage.abilities.effects.common.discard.DiscardControllerEffect;
 import mage.abilities.effects.keyword.AirbendTargetEffect;
+import mage.abilities.keyword.ChannelAbility;
+import mage.abilities.keyword.HasteAbility;
+import mage.abilities.keyword.MadnessAbility;
 import mage.abilities.triggers.BeginningOfUpkeepTriggeredAbility;
 import mage.cards.CardImpl;
 import mage.cards.CardSetInfo;
 import mage.constants.CardType;
+import mage.constants.Duration;
+import mage.constants.Outcome;
 import mage.constants.SubType;
 import mage.constants.SuperType;
 import mage.constants.TargetController;
 import mage.counters.CounterType;
+import mage.filter.FilterPermanent;
 import mage.filter.StaticFilters;
+import mage.game.Game;
+import mage.game.permanent.Permanent;
 import mage.game.permanent.token.AllyToken;
+import mage.players.Player;
 import mage.target.TargetPermanent;
 
 import java.util.UUID;
@@ -31,29 +44,19 @@ public final class CreepingScratchMite extends CardImpl {
     private static final DynamicValue xValue = new CountersControllerCount(CounterType.EXPERIENCE);
 
     public CreepingScratchMite(UUID ownerId, CardSetInfo setInfo) {
-        super(ownerId, setInfo, new CardType[]{CardType.CREATURE}, "{4}{W}");
+        super(ownerId, setInfo, new CardType[]{CardType.CREATURE}, "{1}{C}");
 
-        this.supertype.add(SuperType.LEGENDARY);
-        this.subtype.add(SubType.HUMAN);
-        this.subtype.add(SubType.AVATAR);
-        this.subtype.add(SubType.ALLY);
-        this.power = new MageInt(4);
-        this.toughness = new MageInt(4);
+        
+        this.subtype.add(SubType.HORROR);
+        this.power = new MageInt(2);
+        this.toughness = new MageInt(2);
 
-        // When Aang enters, airbend another target creature.
-        Ability ability = new EntersBattlefieldTriggeredAbility(new AirbendTargetEffect());
-        ability.addTarget(new TargetPermanent(StaticFilters.FILTER_ANOTHER_TARGET_CREATURE));
+        // Discard creeping scratch mite: Each player chooses a permanent, then puts a scratch counter on it. Discard a card.
+        Ability ability = new ChannelAbility("{0}", new CreepingScratchMiteEffect());
+        ability.addEffect(new DiscardControllerEffect(1).setText("Discard a card"));
         this.addAbility(ability);
-
-        // Whenever one or more creatures you control leave the battlefield without dying, you get an experience counter.
-        this.addAbility(new OneOrMoreLeaveWithoutDyingTriggeredAbility(
-                new AddCountersPlayersEffect(CounterType.EXPERIENCE.createInstance(), TargetController.YOU),
-                StaticFilters.FILTER_CONTROLLED_CREATURES
-        ));
-
-        // At the beginning of your upkeep, create a 1/1 white Ally creature token for each experience counter you have.
-        this.addAbility(new BeginningOfUpkeepTriggeredAbility(new CreateTokenEffect(new AllyToken(), xValue)
-                .setText("create a 1/1 white Ally creature token for each experience counter you have")));
+        //Madness {2}
+        this.addAbility(new MadnessAbility(new ManaCostsImpl<>("{2}")));
     }
 
     private CreepingScratchMite(final CreepingScratchMite card) {
@@ -63,5 +66,40 @@ public final class CreepingScratchMite extends CardImpl {
     @Override
     public CreepingScratchMite copy() {
         return new CreepingScratchMite(this);
+    }
+
+    class CreepingScratchMiteEffect extends OneShotEffect {
+
+        CreepingScratchMiteEffect() {
+
+        super(Outcome.Benefit);
+            staticText = "Each Player chooses target permanent, then puts a scratch counter on it. Discard a card.";
+  
+        }
+    @Override
+    public boolean apply(Game game, Ability source) {
+        FilterPermanent keepFilter = new FilterPermanent();
+        Player controller = game.getPlayer(source.getControllerId());
+        if (controller != null) {
+            for (UUID playerId : game.getState().getPlayersInRange(controller.getId(), game)) {
+                Player player = game.getPlayer(playerId);
+                if (player != null) {
+                    TargetPermanent target = new TargetPermanent();
+
+                    player.choose(Outcome.Benefit, target, source, game);
+                    Permanent permanent = game.getPermanent(target.getFirstTarget());
+                    if (permanent != null) {
+                        permanent.addCounters(CounterType.SCRATCH.createInstance(), source.getControllerId(), source, game);
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public OneShotEffect copy() {
+        return new CreepingScratchMiteEffect();
+    }
     }
 }

@@ -33,7 +33,7 @@ public final class Slop extends ExpansionSet {
         this.numBoosterRare = 1;
         this.maxCardNumberInBooster = 390;
 
-        cards.add(new SetCardInfo("Barren Thoughtscape", 1, Rarity.RARE, mage.cards.b.BarrenThoughtscape.class));
+cards.add(new SetCardInfo("Barren Thoughtscape", 1, Rarity.RARE, mage.cards.b.BarrenThoughtscape.class));
 cards.add(new SetCardInfo("Bringer of Tangents", 2, Rarity.COMMON, mage.cards.b.BringerOfTangets.class));
 cards.add(new SetCardInfo("Creeping Scratch-mite", 3, Rarity.UNCOMMON, mage.cards.c.CreepingScratchMite.class));
 cards.add(new SetCardInfo("De-story", 4, Rarity.UNCOMMON, mage.cards.d.Destory.class));
@@ -353,7 +353,7 @@ cards.add(new SetCardInfo("Sell Out", 317, Rarity.UNCOMMON, mage.cards.s.SellOut
 cards.add(new SetCardInfo("The Snack Children", 318, Rarity.RARE, mage.cards.t.TheSnackChildren.class));
 cards.add(new SetCardInfo("Stalling for Time", 319, Rarity.MYTHIC, mage.cards.s.StallingForTime.class));
 cards.add(new SetCardInfo("Woody, Intellectual", 320, Rarity.UNCOMMON, mage.cards.w.WoodyIntellectual.class));
-cards.add(new SetCardInfo("Zurg, Loving Father", 321, Rarity.MYTHIC, mage.cards.z.ZurgLovingFather.class));
+cards.add(new SetCardInfo("Zurg, Loving Father", 322, Rarity.MYTHIC, mage.cards.z.ZurgLovingFather.class));
 cards.add(new SetCardInfo("The Dark Side of the Force", 322, Rarity.MYTHIC, mage.cards.t.TheDarkSideOfTheForce.class));
 cards.add(new SetCardInfo("Godless Beast", 323, Rarity.UNCOMMON, mage.cards.g.GodlessBeast.class));
 cards.add(new SetCardInfo("The Light Side of the Force", 324, Rarity.MYTHIC, mage.cards.t.TheLightSideOfTheForce.class));

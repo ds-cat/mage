@@ -202,6 +202,7 @@ public enum CounterType {
     RUST("rust"),
     QUEST("quest"),
     SILVER("silver"),
+    SCRATCH("scratch"),
     SCREAM("scream"),
     SHADOW("shadow"),
     SHELL("shell"),

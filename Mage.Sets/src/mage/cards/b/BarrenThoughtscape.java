@@ -38,6 +38,7 @@ public final class BarrenThoughtscape extends CardImpl {
 
 
 
+
     public BarrenThoughtscape(UUID ownerId, CardSetInfo setInfo) {
         super(ownerId, setInfo, new CardType[]{CardType.ENCHANTMENT}, "{1}{C}{C}");
 
@@ -76,7 +77,7 @@ enum BarrenThoughtscapeValue implements DynamicValue {
 
     @Override
     public String toString() {
-        return "1";
+        return instance.toString() ;
     }
 
 }
